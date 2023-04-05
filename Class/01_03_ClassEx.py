@@ -3,7 +3,7 @@
 #Design and write a main routine which creates some country
 #objects and displays their data.
 #Let your display method fulfill the following doctest (or something similar):
-class Country:
+class Country():
     def __init__(self, name, continent, leader, population, capital, land_area):
         self.name = name
         self.continent = continent

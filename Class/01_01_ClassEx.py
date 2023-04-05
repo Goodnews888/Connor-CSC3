@@ -9,7 +9,7 @@ class BasketballPlayer():
         print(f"{self.name} has played {self.nogames} games with a total score of {self.scores} and has an average goals per game of {self.average_score()}")
 
 player1 = BasketballPlayer("Yao Ming", 100, 2000)
-player2 = BasketballPlayer("Michael Jordon", 30, 600)
+player2 = BasketballPlayer("Michael Jordon", 31, 600)
 
 player1.display_data()
 print()
