@@ -1,5 +1,6 @@
 #Importing tkinter to allow for GUI
 from tkinter import *
+
 from tkinter import ttk
 
 from PIL import Image, ImageTk
@@ -40,28 +41,33 @@ class MyGUI():
         self.help = Button(self.window, padx =35, pady =13, text = "Help",command=self.help,font=("Aerial", 15,"bold")).place(x=538, y=450)
 
         #Setting up frames for parent self.window
-        self.frame1 = Frame(self.window, width = 250, height = 200)
-        self.frame2 = Frame(self.window, width = 250, height = 200)
-        self.frame3 = Frame(self.window, width = 250, height = 200)
-        self.frame4 = Frame(self.window, width = 250, height = 200)
-        self.frame1.place(x=20, y=100)
-        self.frame2.place(x=20, y=450)
-        self.frame3.place(x=730, y=100)
-        self.frame4.place(x=730, y=450)
+        self.frame1 = Frame(self.window, bg='white', highlightbackground="black", highlightthickness=1, width = 250, height = 120)
+        self.frame2 = Frame(self.window, bg='white', highlightbackground="black", highlightthickness=1,width = 250, height = 170)
+        self.frame3 = Frame(self.window, bg='white', highlightbackground="black", highlightthickness=1,width = 250, height = 120)
+        self.frame4 = Frame(self.window, bg='white', highlightbackground="black", highlightthickness=1,width = 250, height = 170)
+        self.frame1.place(x=20, y=75)
+        self.frame2.place(x=20, y=410)
+        self.frame3.place(x=730, y=75)
+        self.frame4.place(x=730, y=410)
+        
 
+        frame2_label = Label(self.frame2, text="Difficulty:", font=("Aerial", 18,"bold"))
+        frame2_label.place(x=10, y=10)
 
+        self.r1_v = IntVar()
+        self.r1_v.set(1)
+        
 
-
-        r1_v = IntVar()
-        r1_v.set(1)
-
-        '''easyb = ttk.Radiobutton(self.frame2, text="Easy", variable=r1_v, value=1)
-        easyb.place(x=50, y=450)
-        mediumb = ttk.Radiobutton(self.fram2, text="Medium", variable=r1_v, value=2)
-        mediumb.place(x=50, y=470)
-        hardb = ttk.Radiobutton(self.frame2, text="Hard", variable=r1_v, value=3)
-        hardb.place(x=50, y=490)'''
+        self.easyb = Radiobutton(self.frame2, width=7, anchor=W, text="Easy", command=self.difficulty,variable=self.r1_v, value=1, font=("Aerial", 12,"bold"))
+        self.easyb.place(x=50, y=55)
+        self.mediumb = Radiobutton(self.frame2, width=7, anchor=W,text="Medium",command=self.difficulty,variable=self.r1_v, value=2,font=("Aerial", 12,"bold"))
+        self.mediumb.place(x=50, y=85)
+        self.hardb = Radiobutton(self.frame2, width=7, anchor=W,text="Hard",command=self.difficulty,variable=self.r1_v, value=3,font=("Aerial", 12,"bold"))
+        self.hardb.place(x=50, y=115)
         image=Image.open("AS91906\image\logo1.png")
+
+        self.difficulty()
+
 
         # Resize the logo in the given (width, height)
         img=image.resize((90, 100))
@@ -70,18 +76,34 @@ class MyGUI():
         my_img=ImageTk.PhotoImage(img)
 
         # Display the logo with label
-        label=Label(self.window, image=my_img)
+        label=Label(self.window, image=my_img, bg='white')
         label.place(x=455, y=60)
         
         
        
         
-        #self.window.resizable(False, False)
+        self.window.resizable(False, False)
         self.window.mainloop()
-    def easy(self):
-        print('')
-    def medium(self):
-        print('')
+    def difficulty(self):
+        if self.r1_v.get()==1:
+            print('hf')
+            self.easyb.config(bg='green')
+            self.mediumb.config(bg='white')
+            self.hardb.config(bg='white')
+        if self.r1_v.get()==2:
+            self.easyb.config(bg='white')
+            self.mediumb.config(bg='orange')
+            self.hardb.config(bg='white')
+        if self.r1_v.get()==3:
+            self.easyb.config(bg='white')
+            self.mediumb.config(bg='white')
+            self.hardb.config(bg='red')
+
+
+        
+
+        
+            
 
     
 
