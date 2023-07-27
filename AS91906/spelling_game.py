@@ -27,6 +27,7 @@ class MyGUI():
         self.window.configure(width = 1000, height = 600)
         self.window.configure(bg='white')
 
+
         # move window center
         self.winWidth = self.window.winfo_reqwidth()
         self.winwHeight = self.window.winfo_reqheight()
@@ -51,9 +52,15 @@ class MyGUI():
         self.frame4.place(x=730, y=410)
         
 
-        frame2_label = Label(self.frame2, text="Difficulty:", font=("Aerial", 18,"bold"))
+        frame2_label = Label(self.frame2, text="Difficulty:", bg ='white',font=("Aerial", 18,"bold"))
         frame2_label.place(x=10, y=10)
 
+        frame4_label = Label(self.frame4, bg ='white',text="Difficulty:", font=("Aerial", 18,"bold"))
+        frame4_label.place(x=10, y=10)
+
+        self.diffic = Label(self.frame4, bg ='green', text ="Easy",  font=("Aerial", 18,"bold"))
+        self.diffic.place(x=125, y=10)
+    
         self.r1_v = IntVar()
         self.r1_v.set(1)
         
@@ -79,33 +86,30 @@ class MyGUI():
         label=Label(self.window, image=my_img, bg='white')
         label.place(x=455, y=60)
         
-        
-       
+
         
         self.window.resizable(False, False)
         self.window.mainloop()
+
     def difficulty(self):
         if self.r1_v.get()==1:
-            print('hf')
             self.easyb.config(bg='green')
             self.mediumb.config(bg='white')
             self.hardb.config(bg='white')
+            self.diffic.configure(bg ='green', text ="Easy",  font=("Aerial", 18,"bold"))
+
         if self.r1_v.get()==2:
             self.easyb.config(bg='white')
             self.mediumb.config(bg='orange')
             self.hardb.config(bg='white')
+            self.diffic.configure(bg ='orange', text ="Medium",  font=("Aerial", 18,"bold"))
+            
         if self.r1_v.get()==3:
             self.easyb.config(bg='white')
             self.mediumb.config(bg='white')
             self.hardb.config(bg='red')
-
-
+            self.diffic.configure(bg ='red', text ="Hard",  font=("Aerial", 18,"bold"))
         
-
-        
-            
-
-    
 
 
 MyGUI()
