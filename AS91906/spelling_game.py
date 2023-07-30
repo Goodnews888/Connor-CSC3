@@ -17,9 +17,34 @@ import os
 
 class MyGUI():
     def help(self):
-        print("")
+        while self.rootcount <= 1:
+            self.help = Toplevel()
+            self.help.resizable(False, False)
+            self.help.configure(width=500, height = 600)
+            self.helpWidth = self.help.winfo_reqwidth()
+            self.helpHeight = self.help.winfo_reqheight()
+            self.posRight = int(self.help.winfo_screenwidth() / 2 - self.helpWidth / 2)
+            self.posDown = int(self.help.winfo_screenheight() / 2 - self.helpHeight / 1.75)
+            self.help.geometry("+{}+{}".format(self.posRight, self.posDown))
+            self.rootcount += 1
+            self.help.protocol("WM_DELETE_WINDOW", self.result_close)
+
+            #Initializing Labels
+            framehelp = Text(self.help, wrap="word", highlightbackground="black", highlightthickness=1, width =59,height =33.4)
+            framehelp.insert("1.0","In this game, you will be given a letter. You will then have to enter in a word that starts with the given letter. All words that you enter have to be proper words from the official dictionary. After you've entered in a correct word, you will be granted one point, which is added to your score. A new letter will be given, where you will have to again enter in a word that starts with the new given letter. This process is repeated again and again until your time runs out for the round. The goal of the game is to enter in as many words as you can in the timeframe.\n\nIf you do not like your given letter, you have the option to get a new letter via the skip button.\n\nHowever! There is a catch. You cannot enter in the same repeated word. You can't enter in the word 'ant' twice. This rule only applies for the round that you play. So you may enter in the same word, but only in different rounds you play. Another catch are the difficulties. The default difficulty is easy mode. Difficulties determine the minimum letter count of words you enter. For example in easy difficulty. the minimum letter count in words entered is 1... You'd be required to enter in words that have a minimum count of 1 letter. In medium, the minimum letter count is 3. In hard, the minimum letter count is 6.\n\nIf you enter in improper words, repeated words, or words that don't meet the minimum letter count requirement, the program will let you know by highlighting the rule you are breaking in red. It will highlight in red until you are no longer breaking that rule.")
+            framehelp.config(state="disabled")
+            framehelp.place(x=10, y=50)
+            Label(self.help, text = "Instructions", font=('Aerial',20,'bold')).place(x=170, y=10)
+            Button(self.help, text = " X ", command = self.result_close, font=('Aerial',10,'bold')).place(x=460, y=10)
+            
+    
+    
+        
+    def result_close(self):
+        self.rootcount = 1
+        self.help.destroy()
     def start(self):
-        print("")
+        pass
     def __init__(self):
         # Giving attributes to window
         self.window = Tk()
@@ -74,6 +99,9 @@ class MyGUI():
         image=Image.open("AS91906\image\logo1.png")
 
         self.difficulty()
+        
+        self.rootcount = 1
+        
 
 
         # Resize the logo in the given (width, height)
@@ -109,6 +137,8 @@ class MyGUI():
             self.mediumb.config(bg='white')
             self.hardb.config(bg='red')
             self.diffic.configure(bg ='red', text ="Hard",  font=("Aerial", 18,"bold"))
+    
+
         
 
 
