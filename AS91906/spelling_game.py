@@ -16,6 +16,7 @@ import os
 
 
 class MyGUI():
+    
     def help(self):
         while self.rootcount <= 1:
             self.help = Toplevel()
@@ -31,7 +32,7 @@ class MyGUI():
 
             #Initializing Labels
             framehelp = Text(self.help, wrap="word", highlightbackground="black", highlightthickness=1, width =59,height =33.4)
-            framehelp.insert("1.0","In this game, you will be given a letter. You will then have to enter in a word that starts with the given letter. All words that you enter have to be proper words from the official dictionary. After you've entered in a correct word, you will be granted one point, which is added to your score. A new letter will be given, where you will have to again enter in a word that starts with the new given letter. This process is repeated again and again until your time runs out for the round. The goal of the game is to enter in as many words as you can in the timeframe.\n\nIf you do not like your given letter, you have the option to get a new letter via the skip button.\n\nHowever! There is a catch. You cannot enter in the same repeated word. You can't enter in the word 'ant' twice. This rule only applies for the round that you play. So you may enter in the same word, but only in different rounds you play. Another catch are the difficulties. The default difficulty is easy mode. Difficulties determine the minimum letter count of words you enter. For example in easy difficulty. the minimum letter count in words entered is 1... You'd be required to enter in words that have a minimum count of 1 letter. In medium, the minimum letter count is 3. In hard, the minimum letter count is 6.\n\nIf you enter in improper words, repeated words, or words that don't meet the minimum letter count requirement, the program will let you know by highlighting the rule you are breaking in red. It will highlight in red until you are no longer breaking that rule.")
+            framehelp.insert("1.0","In this game, you will be given a letter. You will then have to enter in a word that starts with the given letter. All words that you enter have to be proper words from the official dictionary. After you've entered in a correct word, you will be granted one point, which is added to your score. A new letter will be given, where you will have to again enter in a word that starts with the new given letter. This process is repeated again and again until your time runs out for the round. The goal of the game is to enter in as many words as you can in the timeframe.\n\nIf you do not like your given letter, you have the option to get a new letter via the skip button.\n\nHowever! There is a catch. You cannot enter in the same repeated word. You can't enter in the word 'ant' twice. This rule only applies for the round that you play. So you may enter in the same word, but only in different rounds you play. Another catch are the difficulties. The default difficulty is easy mode. Difficulties determine the minimum letter count of words you enter. For example in easy difficulty. the minimum letter count for words entered is 1... You'd be required to enter in words that have a minimum count of 1 letter. In medium, the minimum letter count is 3. In hard, the minimum letter count is 6.\n\nIf you enter in improper words, repeated words, or words that don't meet the minimum letter count requirement, the program will let you know by highlighting the rule you are breaking in red. It will highlight in red until you are no longer breaking that rule.")
             framehelp.config(state="disabled")
             framehelp.place(x=10, y=50)
             Label(self.help, text = "Instructions", font=('Aerial',20,'bold')).place(x=170, y=10)
@@ -43,8 +44,46 @@ class MyGUI():
     def result_close(self):
         self.rootcount = 1
         self.help.destroy()
+    def gameclose(self):
+        self.window.deiconify()
+        self.game.destroy()
     def start(self):
-        pass
+        #Giving attributes to game window
+        self.game = Toplevel()
+        self.game.resizable(False, False)
+        self.game.title("Spelling Game")
+        self.game.configure(width = 1000, height = 600)
+        self.game.configure(bg='white')
+
+        #move game window to center
+        self.gameWidth = self.game.winfo_reqwidth()
+        self.gameHeight = self.game.winfo_reqheight()
+        self.posRight = int(self.game.winfo_screenwidth() / 2 - self.gameWidth / 2)
+        self.posDown = int(self.game.winfo_screenheight() / 2 - self.gameHeight / 1.75)
+        self.game.geometry("+{}+{}".format(self.posRight, self.posDown))
+
+        #When game window is opened, main window is hidden.
+        self.window.withdraw()
+
+        #When game window is closed, main window is shown
+        self.game.protocol("WM_DELETE_WINDOW", self.gameclose)
+
+        self.game_frame1=Frame(self.game, bg='white', highlightbackground="black", highlightthickness=1, width = 980, height = 210)
+        self.game_frame1.place(x=10,y=10)
+        self.game_frame2=Frame(self.game, bg='white', highlightbackground="black", highlightthickness=1, width = 270, height = 150)
+        self.game_frame2.place(x=720,y=230)
+
+        rule1 = Label(self.game_frame2, bg ='white',text="• Minimum letter count:", font=("Aerial", 13))
+        rule1.place(x=25,y=50)
+        rule2 = Label(self.game_frame2, bg ='white',text="• No repeated words", font=("Aerial", 13))
+        rule2.place(x=25, y=80)
+        rule3 = Label(self.game_frame2, bg ='white',text="• Valid words only", font=("Aerial", 13))
+        rule3.place(x=25, y=110)
+
+        
+    
+
+
     def __init__(self):
         # Giving attributes to window
         self.window = Tk()
@@ -76,20 +115,26 @@ class MyGUI():
         self.frame3.place(x=730, y=75)
         self.frame4.place(x=730, y=410)
         
-
-        frame2_label = Label(self.frame2, text="Difficulty:", bg ='white',font=("Aerial", 18,"bold"))
-        frame2_label.place(x=10, y=10)
-
-        frame4_label = Label(self.frame4, bg ='white',text="Difficulty:", font=("Aerial", 18,"bold"))
-        frame4_label.place(x=10, y=10)
-
+        #Initializing Labels in the frames created above.
+        Label(self.frame1, text = "Previous Score", bg='white',font=("Aerial", 18,"bold")).place(x=30, y=5)
+        Label(self.frame2, text="Difficulty:", bg ='white',font=("Aerial", 18,"bold")).place(x=10, y=10)
+        Label(self.frame3, text = "High Score", bg='white',font=("Aerial", 18,"bold")).place(x=60, y=5)
+        Label(self.frame4, bg ='white',text="Difficulty:", font=("Aerial", 18,"bold")).place(x=10, y=10)
+        rule1 = Label(self.frame4, bg ='white',text="• Minimum letter count:", font=("Aerial", 13))
+        rule1.place(x=25,y=50)
+        rule2 = Label(self.frame4, bg ='white',text="• No repeated words", font=("Aerial", 13))
+        rule2.place(x=25, y=80)
+        rule3 = Label(self.frame4, bg ='white',text="• Valid words only", font=("Aerial", 13))
+        rule3.place(x=25, y=110)
         self.diffic = Label(self.frame4, bg ='green', text ="Easy",  font=("Aerial", 18,"bold"))
         self.diffic.place(x=125, y=10)
+        self.diffminletter = Label(self.frame4, bg='green',text ="1", font=("Aerial", 13, "bold"))
+        self.diffminletter.place(x=195,y=50)
     
         self.r1_v = IntVar()
         self.r1_v.set(1)
         
-
+        #Initializing Radiobuttons in frame2, for the difficulty option changer.
         self.easyb = Radiobutton(self.frame2, width=7, anchor=W, text="Easy", command=self.difficulty,variable=self.r1_v, value=1, font=("Aerial", 12,"bold"))
         self.easyb.place(x=50, y=55)
         self.mediumb = Radiobutton(self.frame2, width=7, anchor=W,text="Medium",command=self.difficulty,variable=self.r1_v, value=2,font=("Aerial", 12,"bold"))
@@ -125,19 +170,21 @@ class MyGUI():
             self.mediumb.config(bg='white')
             self.hardb.config(bg='white')
             self.diffic.configure(bg ='green', text ="Easy",  font=("Aerial", 18,"bold"))
+            self.diffminletter.configure(bg='green', text="1")
 
         if self.r1_v.get()==2:
             self.easyb.config(bg='white')
             self.mediumb.config(bg='orange')
             self.hardb.config(bg='white')
             self.diffic.configure(bg ='orange', text ="Medium",  font=("Aerial", 18,"bold"))
-            
+            self.diffminletter.configure(bg='orange', text="3")
+
         if self.r1_v.get()==3:
             self.easyb.config(bg='white')
             self.mediumb.config(bg='white')
             self.hardb.config(bg='red')
             self.diffic.configure(bg ='red', text ="Hard",  font=("Aerial", 18,"bold"))
-    
+            self.diffminletter.configure(bg='red', text="6")
 
         
 
