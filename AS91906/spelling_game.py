@@ -1,15 +1,11 @@
 #Importing tkinter to allow for GUI
 from tkinter import *
 
-from tkinter import ttk
-
 from PIL import Image, ImageTk
 #Importing messagebox to allow for error messages if there is wrong input by the user
 from tkinter import messagebox
 
-#Importing random to allow for random generation of receipt number.
-import random
-import os
+
 
 
 
@@ -73,12 +69,39 @@ class MyGUI():
         self.game_frame2=Frame(self.game, bg='white', highlightbackground="black", highlightthickness=1, width = 270, height = 150)
         self.game_frame2.place(x=720,y=230)
 
-        rule1 = Label(self.game_frame2, bg ='white',text="• Minimum letter count:", font=("Aerial", 13))
+        #Constructing labels inside the difficulty information frame (game_frame2)
+
+        Label(self.game_frame2, text="Difficulty:", bg ='white',font=("Aerial", 18,"bold")).place(x=10, y=12)
+
+        diffLabel=Label(self.game_frame2,text=self.game_diff,bg='white',font=("Aerial", 18))
+        diffLabel.place(x=125, y=15)
+
+        rule1 = Label(self.game_frame2, bg ='white',text="• Minimum letter count:", font=("Aerial", 14))
         rule1.place(x=25,y=50)
-        rule2 = Label(self.game_frame2, bg ='white',text="• No repeated words", font=("Aerial", 13))
+        rule2 = Label(self.game_frame2, bg ='white',text="• No repeated words", font=("Aerial", 14))
         rule2.place(x=25, y=80)
-        rule3 = Label(self.game_frame2, bg ='white',text="• Valid words only", font=("Aerial", 13))
+        rule3 = Label(self.game_frame2, bg ='white',text="• Valid words only", font=("Aerial", 14))
         rule3.place(x=25, y=110)
+
+
+        diffminletter = self.diffminletter["text"]
+        game_diffminletter = Label(self.game_frame2, bg='white', text=diffminletter, font=("Aerial", 14))
+        game_diffminletter.place(x=220, y=50)
+
+        letter_Entry = Entry(self.game, width=44, font=("Aerial", 30))
+        letter_Entry.place(x=10, y=450)
+
+        Skip = Button(self.game, padx = 50, text = "Skip (Esc)", command=self.skip,font=("Aerial", 15,"bold"))
+        Skip.place(x=150, y=530)
+
+        Submit = Button(self.game, padx=30, text = "Submit (Enter)", command=self.submit,font=("Aerial", 15,"bold"))
+        Submit.place(x=625,y=530)
+    def skip(self):
+        print('')
+    def submit(self):
+        print('')
+
+        
 
         
     
@@ -172,12 +195,18 @@ class MyGUI():
             self.diffic.configure(bg ='green', text ="Easy",  font=("Aerial", 18,"bold"))
             self.diffminletter.configure(bg='green', text="1")
 
+            #Game window
+            self.game_diff = "Easy"
+
         if self.r1_v.get()==2:
             self.easyb.config(bg='white')
             self.mediumb.config(bg='orange')
             self.hardb.config(bg='white')
             self.diffic.configure(bg ='orange', text ="Medium",  font=("Aerial", 18,"bold"))
             self.diffminletter.configure(bg='orange', text="3")
+
+            #Game window
+            self.game_diff = "Medium"
 
         if self.r1_v.get()==3:
             self.easyb.config(bg='white')
@@ -186,15 +215,8 @@ class MyGUI():
             self.diffic.configure(bg ='red', text ="Hard",  font=("Aerial", 18,"bold"))
             self.diffminletter.configure(bg='red', text="6")
 
-        
+            #Game window
+            self.game_diff = "Hard"
 
-
+    
 MyGUI()
-
-
-
-
-
-
-
-
