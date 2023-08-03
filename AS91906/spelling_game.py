@@ -1,10 +1,11 @@
 #Importing tkinter to allow for GUI
 from tkinter import *
+import tkinter as tk
 
+import time
+import threading
 from PIL import Image, ImageTk
 #Importing messagebox to allow for error messages if there is wrong input by the user
-from tkinter import messagebox
-
 
 
 
@@ -43,6 +44,24 @@ class MyGUI():
     def gameclose(self):
         self.window.deiconify()
         self.game.destroy()
+    def count_down(self):
+        counting=True
+        second = 60
+        self.game.after(61000,self.gameclose)
+        while second >-1 and counting:
+            if second >=0:
+                if second > 9:
+                    self.second_var.set(f'{second}')
+                    second-=1
+                    self.game.update()
+                    time.sleep(1)
+                else:
+                    self.second_var.set(f' 0{second}')
+                    self.game.update()
+                    time.sleep(1)
+            if 'normal' == self.window.state():
+                break
+            
     def start(self):
         #Giving attributes to game window
         self.game = Toplevel()
@@ -68,9 +87,38 @@ class MyGUI():
         self.game_frame1.place(x=10,y=10)
         self.game_frame2=Frame(self.game, bg='white', highlightbackground="black", highlightthickness=1, width = 270, height = 150)
         self.game_frame2.place(x=720,y=230)
+        
+
+
+        #Constructing labels inside game_frame1
+        gameTitle = Label(self.game_frame1, bg='white',text="A Vocabulary\nGame",font=("Aerial", 30,"bold"))
+        gameTitle.place(x=360, y=60)
+
+        self.gamequit = Button(self.game_frame1, text="Quit",padx = 14,command=self.gameclose, font=('Aerial',14,'bold'))
+        self.gamequit.place(x=887,y=10)
+
+
+
+        # Display the logo with label
+        time_image=Label(self.game_frame1, image=self.my_time, bg='white')
+        time_image.place(x=120, y=30)
+        score_image=Label(self.game_frame1,  image=self.my_score, bg='white')
+        score_image.place(x=730, y= 30)
+        square_image=Label(self.game, image=self.my_square, bg='white')
+        square_image.place(x=450, y=320)
+
+        time_remain=Label(self.game_frame1, text ="Time Remaining:", bg='white',font=('Aerial',18,'bold'))
+        time_remain.place(x=50, y=140)
+
+        score_label=Label(self.game_frame1, text ="Score:", bg='white',font=('Aerial',18,'bold'))
+        score_label.place(x=700,y=140)
+        
+
+
+        
+
 
         #Constructing labels inside the difficulty information frame (game_frame2)
-
         Label(self.game_frame2, text="Difficulty:", bg ='white',font=("Aerial", 18,"bold")).place(x=10, y=12)
 
         diffLabel=Label(self.game_frame2,text=self.game_diff,bg='white',font=("Aerial", 18))
@@ -88,14 +136,31 @@ class MyGUI():
         game_diffminletter = Label(self.game_frame2, bg='white', text=diffminletter, font=("Aerial", 14))
         game_diffminletter.place(x=220, y=50)
 
-        letter_Entry = Entry(self.game, width=44, font=("Aerial", 30))
-        letter_Entry.place(x=10, y=450)
+        type_label = Label(self.game,bg='white',justify =LEFT,text='Type a word starting\nwith the letter...',font=("Aerial", 19,"bold"))
+        type_label.place(x=380,y=250)
 
-        Skip = Button(self.game, padx = 50, text = "Skip (Esc)", command=self.skip,font=("Aerial", 15,"bold"))
+
+
+        letter_Entry = tk.Entry(self.game, width=44, highlightbackground="black", highlightthickness=2,justify = CENTER,font=("Aerial", 29))
+        letter_Entry.place(x=14,y=450)
+
+        Skip = Button(self.game, padx = 50, text = "Skip (Esc)",command=self.skip,font=("Aerial", 15,"bold"))
         Skip.place(x=150, y=530)
 
         Submit = Button(self.game, padx=30, text = "Submit (Enter)", command=self.submit,font=("Aerial", 15,"bold"))
         Submit.place(x=625,y=530)
+
+        self.second_var = tk.StringVar(value= '00')
+        self.second_lbl = tk.Label(self.game,bg='white',font=('Aerial',18,'bold'),textvariable=self.second_var)
+        self.second_lbl.place(x=255, y=152)
+
+        countdown_thread = threading.Thread(target=self.count_down)
+        countdown_thread.start()
+
+
+        
+    
+
     def skip(self):
         print('')
     def submit(self):
@@ -113,6 +178,8 @@ class MyGUI():
         self.window.title("Spelling Game")
         self.window.configure(width = 1000, height = 600)
         self.window.configure(bg='white')
+
+        self.counting = False
 
 
         # move window center
@@ -164,7 +231,7 @@ class MyGUI():
         self.mediumb.place(x=50, y=85)
         self.hardb = Radiobutton(self.frame2, width=7, anchor=W,text="Hard",command=self.difficulty,variable=self.r1_v, value=3,font=("Aerial", 12,"bold"))
         self.hardb.place(x=50, y=115)
-        image=Image.open("AS91906\image\logo1.png")
+        logo=Image.open("AS91906\image\logo1.png")
 
         self.difficulty()
         
@@ -173,16 +240,30 @@ class MyGUI():
 
 
         # Resize the logo in the given (width, height)
-        img=image.resize((90, 100))
+        logo_size=logo.resize((90, 100))
 
-        # Conver the logo in TkImage
-        my_img=ImageTk.PhotoImage(img)
+        # Convert the logo in TkImage
+        my_logo=ImageTk.PhotoImage(logo_size)
 
-        # Display the logo with label
-        label=Label(self.window, image=my_img, bg='white')
-        label.place(x=455, y=60)
         
+        # Display the logo with label
+        label=Label(self.window, image=my_logo, bg='white')
+        label.place(x=455, y=60)
 
+        #Defining images for game window
+        time=Image.open(r"AS91906\image\time.PNG")
+        score=Image.open(r"AS91906\image\score.PNG")
+        square=Image.open(r"AS91906\image\square.PNG")
+
+        # Resize the logo in the given (width, height)
+        time_size=time.resize((100, 100))
+        score_size=score.resize((90, 100))
+        square_size=square.resize((110, 110))
+
+        # Convert the logo in TkImage
+        self.my_time=ImageTk.PhotoImage(time_size)
+        self.my_score=ImageTk.PhotoImage(score_size)
+        self.my_square=ImageTk.PhotoImage(square_size)
         
         self.window.resizable(False, False)
         self.window.mainloop()
