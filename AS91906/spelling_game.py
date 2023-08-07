@@ -7,8 +7,8 @@ import threading
 from PIL import Image, ImageTk
 #Importing messagebox to allow for error messages if there is wrong input by the user
 
-
-
+import random
+import re
 
 
 
@@ -37,7 +37,7 @@ class MyGUI():
             
     
     
-        
+
     def result_close(self):
         self.rootcount = 1
         self.help.destroy()
@@ -57,6 +57,7 @@ class MyGUI():
                     time.sleep(1)
                 else:
                     self.second_var.set(f' 0{second}')
+                    second-=1
                     self.game.update()
                     time.sleep(1)
             if 'normal' == self.window.state():
@@ -141,8 +142,8 @@ class MyGUI():
 
 
 
-        letter_Entry = tk.Entry(self.game, width=44, highlightbackground="black", highlightthickness=2,justify = CENTER,font=("Aerial", 29))
-        letter_Entry.place(x=14,y=450)
+        self.word_Entry = tk.Entry(self.game, width=44, highlightbackground="black", highlightthickness=2,justify = CENTER,font=("Aerial", 29))
+        self.word_Entry.place(x=14,y=450)
 
         Skip = Button(self.game, padx = 50, text = "Skip (Esc)",command=self.skip,font=("Aerial", 15,"bold"))
         Skip.place(x=150, y=530)
@@ -152,10 +153,21 @@ class MyGUI():
 
         self.second_var = tk.StringVar(value= '00')
         self.second_lbl = tk.Label(self.game,bg='white',font=('Aerial',18,'bold'),textvariable=self.second_var)
-        self.second_lbl.place(x=255, y=152)
+        self.second_lbl.place(x=263, y=152)
+        self.word_list = []
+
+        self.random_letter()
 
         countdown_thread = threading.Thread(target=self.count_down)
+        countdown_thread.daemon = True
         countdown_thread.start()
+
+    def random_letter(self):
+        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        self.random_letter =random.sample(alphabet, 1)
+        self.letter = Label(self.game, text=self.random_letter,fg='white', bg='black',font=('Aerial',30,'bold'))
+        self.letter.place(x=490,y=350)
+        
 
 
         
@@ -164,7 +176,40 @@ class MyGUI():
     def skip(self):
         print('')
     def submit(self):
-        print('')
+
+        word_entry = str(self.word_Entry.get())
+        for x in self.random_letter:
+            if word_entry[0].upper() == x:
+                print('Word starts with',x)
+                f = r"AS91906\words_alpha.txt"
+                with open(f, 'r') as file:
+                    contents = file.read()
+                    word = word_entry.lower()
+                    print(word)
+                    if (re.search(r'\b'+ re.escape(word) + r'\b', contents, re.MULTILINE)):
+                        print("That word exists!")
+                        if len(word) >= self.minletter:
+                            print("Word entered is greater or equal to the minimum letter count assigned. ")
+                            if word in self.word_list:
+                                print('already there')
+                                print(self.word_list)
+                            else:
+                                print('not there')
+                                self.word_list.append(word)
+                                print(self.word_list)
+
+                            
+                        else:
+                            print("Word entered is not greater or equal to the minimum letter count assigned.")
+                            
+                            
+                    else:
+                        print("Couldn't find word.")
+                
+            else:
+                print("Word does not start with", x)
+        
+
 
         
 
@@ -274,6 +319,7 @@ class MyGUI():
             self.mediumb.config(bg='white')
             self.hardb.config(bg='white')
             self.diffic.configure(bg ='green', text ="Easy",  font=("Aerial", 18,"bold"))
+            self.minletter = 1
             self.diffminletter.configure(bg='green', text="1")
 
             #Game window
@@ -284,6 +330,7 @@ class MyGUI():
             self.mediumb.config(bg='orange')
             self.hardb.config(bg='white')
             self.diffic.configure(bg ='orange', text ="Medium",  font=("Aerial", 18,"bold"))
+            self.minletter = 3
             self.diffminletter.configure(bg='orange', text="3")
 
             #Game window
@@ -294,6 +341,7 @@ class MyGUI():
             self.mediumb.config(bg='white')
             self.hardb.config(bg='red')
             self.diffic.configure(bg ='red', text ="Hard",  font=("Aerial", 18,"bold"))
+            self.minletter = 6
             self.diffminletter.configure(bg='red', text="6")
 
             #Game window
