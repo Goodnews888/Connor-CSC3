@@ -1,0 +1,10 @@
+a = open("database.txt","r")
+print(a.read())
+a.close()
+
+a = open("database.txt","w")
+a.write("12")
+a.close()
+a = open("database.txt","r+")
+print(a.read())
+a.close()
