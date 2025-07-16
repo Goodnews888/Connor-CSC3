@@ -11,9 +11,15 @@ import random
 import re
 import time
 import threading
+import os
+
+
+
 
 #MyGUI is a class that contains all the functions necessary to run the game.
 class MyGUI():
+
+    
     
     def help(self):
         #This while loop limits the number of help windows to only one count.
@@ -140,6 +146,12 @@ class MyGUI():
                     time.sleep(1)
             if 'normal' == self.window.state():
                 break
+    def load_image(self, filename):
+        return Image.open(os.path.join(self.img_dir, filename))
+    def load_text_file(self, filename):
+        path = os.path.join(self.base_dir, filename)
+        with open(path, 'r') as file:
+            return file.read()
             
     def start_game(self):
         #Giving attributes to game window
@@ -296,72 +308,35 @@ class MyGUI():
         self.letter.destroy()
         self.random_letter_func()
     def submit(self):
-        #This function runs when the user clicks the submit button.
-        #This function will check to see if the word entered in by the user meets with the word entry requirements.
-        #If the word does meet with the word entry requirements, one point is added to the user's score, and
-        #a new random letter from the alphabet is generated. Otherwise, if it does not meet with the word entry requirements,
-        #the program rejects the entered word and shows what rules the user is breaking.
         word_entry = str(self.word_Entry.get())
-        #if statement to check if word entry is empty, if it is, program will reject word, and will highlight 
-        #the 'Valid Words Only' rule in red color. If not empty, the program will continue its process of checking
-        #if the word meets the entry requirements.
-        if word_entry.__len__()!=0:
+        if len(word_entry) != 0:
             for x in self.random_letter:
-                #if statement to check if word entered by the user starts with the same letter 
-                #as the randomly generated letter, if it is, the program will continue its process of checking
-                #if the word meets the entry requirements. If the word entered by the user, doesn't
-                #start with the same letter as the randomly generated letter, the program will reject
-                #the word and highlight the "Valid Words Only' rule in red color.
                 if word_entry[0].upper() == x:
-                    f = r"AS91906\words_alpha.txt"
-                    with open(f, 'r') as file:
-                        contents = file.read()
-                        word = word_entry.lower()
-                        #if statement to check if word entered by the user is in the dictionary txt file.
-                        #If the word is in the dictionary txt file, the program will continue its process
-                        #of checking if the word meets the entry requirements. If the word entered
-                        #by the user is not a word in the dictionary, the program will reject the
-                        #word and highlight the 'Valid Words Only' rule in red color.
-                        if (re.search(r'\b'+ re.escape(word) + r'\b', contents, re.MULTILINE)):
-                            self.rule3.config(bg='white')
-                            #if statement to check if word entered by the user has a length equal to or greater
-                            #than the minimum letter count requirement(dependant on the user's chosen
-                            #difficulty, if it is, the program will continue its process
-                            #of checking if the word meets the entry requirements. If the word entered by the user
-                            #has a length less than the minimum letter count requirement, the program will reject
-                            #the word and highlight the "Minimum Letter Count" rule in red color.
-                            if len(word) >= self.minletter:
+                    word = word_entry.lower()
+                    if word in self.dictionary_words:
+                        self.rule3.config(bg='white')
+                        if len(word) >= self.minletter:
+                            if word in self.word_list:
+                                self.rule1.config(bg='white')
+                                self.rule2.config(bg='red')
+                                self.rule3.config(bg='white')
+                            else:
                                 self.rule1.config(bg='white')
                                 self.rule2.config(bg='white')
                                 self.rule3.config(bg='white')
-                                #The final if statement, is to check if the word entered by the user has already
-                                #been previously entered by the user in the current round the user is playing.
-                                #If the word hasn't been previously entered by the user, the program will
-                                #accept the word as valid, and add one point to the user's score. Then the program will
-                                #generate a new random letter. However, if the word has been entered previously by the user,
-                                #the program will reject the word and highlight the "No Repeated Words" rule in red color.
-                                if word in self.word_list:
-                                    self.rule1.config(bg='white')
-                                    self.rule2.config(bg='red')
-                                    self.rule3.config(bg='white')
-                                else:
-                                    self.rule1.config(bg='white')
-                                    self.rule2.config(bg='white')
-                                    self.rule3.config(bg='white')
-                                    self.scoreno+=1
-                                    self.score.config(text=self.scoreno)
-                                    self.letter.destroy()
-                                    self.word_Entry.delete(0, 'end')
-                                    self.random_letter_func()
-                                    self.word_list.append(word)
-                            else:
-                                self.rule1.config(bg='red')
-                                self.rule2.config(bg='white')
-                                self.rule3.config(bg='white')
-                                
+                                self.scoreno += 1
+                                self.score.config(text=self.scoreno)
+                                self.letter.destroy()
+                                self.word_Entry.delete(0, 'end')
+                                self.random_letter_func()
+                                self.word_list.append(word)
                         else:
+                            self.rule1.config(bg='red')
                             self.rule2.config(bg='white')
-                            self.rule3.config(bg='red')
+                            self.rule3.config(bg='white')
+                    else:
+                        self.rule2.config(bg='white')
+                        self.rule3.config(bg='red')
                 else:
                     self.rule1.config(bg='white')
                     self.rule2.config(bg='white')
@@ -370,6 +345,7 @@ class MyGUI():
             self.rule1.config(bg='white')
             self.rule2.config(bg='white')
             self.rule3.config(bg='red')
+
         
             
 
@@ -381,6 +357,12 @@ class MyGUI():
 
 
     def __init__(self):
+        self.img_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "image")
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.words_path = os.path.join(self.base_dir, "words_alpha.txt")
+        with open(self.words_path, 'r') as file:
+            self.dictionary_words = set(word.strip() for word in file.readlines())
+
         # Giving attributes to window
         self.window = Tk()
         self.window.title("Spelling Game")
@@ -462,8 +444,9 @@ class MyGUI():
         self.theme_chosen.bind("<<ComboboxSelected>>", self.color)
         self.theme_chosen.place(x=730, y=210)
 
+
         #Retrieving logo image
-        logo=Image.open(r"AS91906\image\logo1.png")
+        logo = self.load_image("logo1.png")
         
         # Resize the logo in the given (width, height)
         logo_size=logo.resize((90, 100))
@@ -477,9 +460,9 @@ class MyGUI():
         self.logo_label.place(x=455, y=60)
 
         #Retrieving images for game window
-        time=Image.open(r"AS91906\image\time.PNG")
-        score=Image.open(r"AS91906\image\score.PNG")
-        square=Image.open(r"AS91906\image\square.PNG")
+        time=self.load_image("time.PNG")
+        score=self.load_image("score.PNG")
+        square=self.load_image("square.PNG")
 
         # Resize the logo in the given (width, height)
         time_size=time.resize((100, 100))
@@ -541,7 +524,7 @@ class MyGUI():
             self.bordergamecolor ="#ED7014"
             self.type_labelcolor = "#ED7014"
             self.bg_gamecolor = "#7e4614"
-            
+    
     def difficulty(self):
         #If difficulty = 'Easy'
         if self.r1_v.get()==1:
