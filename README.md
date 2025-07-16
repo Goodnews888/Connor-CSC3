@@ -3,4 +3,13 @@ Each word entered will reward the player with a point. Each word entered, the ap
 under a time limit... Once that time limit is reached, the game halts. There are different difficulties of the game, where the difficulties control the minimum number of letters a word entered can be. As you'd imagine users being
 able to enter 1 letter words or even 2 letter words would be far too easy, thus these difficulties are introduced. 
 
+DOWNLOAD INSTRUCTIONS:
+
+In your terminal type:
+git clone https://github.com/Goodnews888/VocabGame.git
+
+OR
+
+Download the ZIP file attached.
+
 Enjoy!
