@@ -460,9 +460,9 @@ class MyGUI():
         self.logo_label.place(x=455, y=60)
 
         #Retrieving images for game window
-        time=self.load_image("time.PNG")
-        score=self.load_image("score.PNG")
-        square=self.load_image("square.PNG")
+        time=self.load_image("time.png")
+        score=self.load_image("score.png")
+        square=self.load_image("square.png")
 
         # Resize the logo in the given (width, height)
         time_size=time.resize((100, 100))
